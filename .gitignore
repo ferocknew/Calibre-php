@@ -1,0 +1,7 @@
+.idea
+composer.lock
+web.config
+*.log
+config.php
+
+
