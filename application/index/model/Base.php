@@ -10,16 +10,18 @@ class Base extends Model
     private static $bcLength = 0;
     protected static $mydb = null;
     protected static $baseDb = null;
+    protected static $basePath = '';
 
     public static function init()
     {
+        self::$basePath = config()['baseConfig']['Calibre-database'];
         self::$bcLength = config('base.bcLength');
         bcscale(self::$bcLength);
 
         self::$mydb = Db::connect([// 数据库类型
             'type' => 'sqlite',
             // 数据库连接DSN配置
-            'dsn' => 'sqlite:' . config('calibre-database') . 'metadata.db',
+            'dsn' => 'sqlite:' . self::$basePath . 'metadata.db',
             // 数据库连接参数
             'params' => [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,
                 \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC,

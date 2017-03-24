@@ -16,7 +16,7 @@ class Base extends Controller
 
     public function _initialize()
     {
-        Config::parse(ROOT_PATH . 'Db/config.json', 'json');
+        Config::parse(ROOT_PATH . 'Db/config.json', 'json', 'baseConfig');
         //        $moduleName = request()->module();
         //        Session::prefix($moduleName);
 

@@ -1,3 +1,4 @@
 {
-  "Calibre-database": "/var/services/homes/admin/CloudStation/Calibre-database/"
+  "Calibre-database": "/var/services/homes/admin/CloudStation/Calibre-database/",
+  "title": "Calibre-web"
 }

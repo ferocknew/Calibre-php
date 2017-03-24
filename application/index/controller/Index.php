@@ -15,6 +15,9 @@ class Index extends Base
 
     public function index()
     {
+        //        $r = self::$model->index();
+        //        halt($r);
+
         return $this->fetch('index');
     }
 }

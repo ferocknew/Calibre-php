@@ -21,7 +21,7 @@ class Index extends Base
     {
         $r = self::$mydb->query('select path from books limit 1');
 
-        $path = config('calibre-database') . $r[0]['path'] . '/';
+        $path = self::$basePath . $r[0]['path'] . '/';
         $dir = $path;//这里输入其它路径
         //PHP遍历文件夹下所有文件
         $handle = opendir($dir . ".");
