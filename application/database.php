@@ -11,13 +11,13 @@
 
 return [
     // 数据库类型
-    'type'            => 'mysql',
+    'type'            => 'sqlite',
     // 服务器地址
-    'hostname'        => '127.0.0.1',
+    'hostname'        => '',
     // 数据库名
     'database'        => '',
     // 用户名
-    'username'        => 'root',
+    'username'        => '',
     // 密码
     'password'        => '',
     // 端口
