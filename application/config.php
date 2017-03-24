@@ -41,7 +41,7 @@ return [
     // 默认时区
     'default_timezone'       => 'PRC',
     // 是否开启多语言
-    'lang_switch_on'         => false,
+    'lang_switch_on'         => true,
     // 默认全局过滤方法 用逗号分隔多个
     'default_filter'         => '',
     // 默认语言
@@ -101,7 +101,7 @@ return [
     // 域名根，如thinkphp.cn
     'url_domain_root'        => '',
     // 是否自动转换URL中的控制器和操作名
-    'url_convert'            => true,
+    'url_convert'            => false,
     // 默认的访问控制器层
     'url_controller_layer'   => 'controller',
     // 表单请求类型伪装变量
@@ -162,14 +162,20 @@ return [
     // | 日志设置
     // +----------------------------------------------------------------------
 
-    'log'                    => [
-        // 日志记录方式，内置 file socket 支持扩展
-        'type'  => 'File',
+    'log' => [// 日志记录方式，内置 file socket 支持扩展
+        // 'type'  => 'File',
+        'type' => 'socket',
+        'host' => '127.0.0.1',
+        //日志强制记录到配置的client_id
+        'force_client_ids' => ['ferock1'],
+        //限制允许读取日志的client_id
+        'allow_client_ids' => [],
         // 日志保存目录
-        'path'  => LOG_PATH,
+        'path' => LOG_PATH,
         // 日志记录级别
         'level' => [],
-    ],
+        'apart_level' => ['error','sql'],
+        'file_size' => 2097152],
 
     // +----------------------------------------------------------------------
     // | Trace设置 开启 app_trace 后 有效

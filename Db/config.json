@@ -1,4 +1,5 @@
 {
   "Calibre-database": "/var/services/homes/admin/CloudStation/Calibre-database/",
-  "title": "Calibre-web"
+  "title": "Calibre-web",
+  "pageSize": 60
 }

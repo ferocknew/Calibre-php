@@ -11,10 +11,12 @@ class Base extends Model
     protected static $mydb = null;
     protected static $baseDb = null;
     protected static $basePath = '';
+    protected static $baseConfig = null;
 
     public static function init()
     {
-        self::$basePath = config()['baseConfig']['Calibre-database'];
+        self::$baseConfig = config()['baseConfig'];
+        self::$basePath = self::$baseConfig['Calibre-database'];
         self::$bcLength = config('base.bcLength');
         bcscale(self::$bcLength);
 

@@ -1,8 +1,8 @@
 {include file="index/layout"}
-{% block body %}
-{% if g.user.show_detail_random() %}
+<!-- {% block body %}
+{% if g.user.show_detail_random() %} -->
 <div class="discover">
-    <h2>{{_('Discover (Random Books)')}}</h2>
+    <h2>{:lang('Discover (Random Books)')}</h2>
     <div class="row">
 
         {% for entry in random %}
@@ -37,12 +37,12 @@
         {% endfor %}
     </div>
 </div>
-{% endif %}
+<!-- {% endif %} -->
 <div class="discover load-more">
-    <h2>{{title}}</h2>
+    <h2>{$title}</h2>
     <div class="row">
-        {% if entries[0] %}
-        {% for entry in entries %}
+        <!-- {% if entries[0] %}
+        {% for entry in entries %} -->
         <div id="books" class="col-sm-3 col-lg-2 col-xs-6 book">
             <div class="cover">
                 <a href="{{ url_for('show_book', id=entry.id) }}">
@@ -77,8 +77,8 @@
                 {% endif %}
             </div>
         </div>
-        {% endfor %}
-        {% endif %}
+        <!-- {% endfor %}
+        {% endif %}-->
     </div>
 </div>
 {% endblock %}

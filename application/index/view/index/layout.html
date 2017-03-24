@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>{{instance}} | {{title}}</title>
+<head>
+    <title>{$instance}</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -15,8 +15,8 @@
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
-      <script src="/static/js/html5shiv/html5shiv.js"></script>
-      <script src="/static/js//respond.js/respond.min.js"></script>
+    <script src="/static/js/html5shiv/html5shiv.js"></script>
+    <script src="/static/js//respond.js/respond.min.js"></script>
     <![endif]-->
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
@@ -29,165 +29,163 @@
     <script src="/static/js/libs/context.min.js"></script>
     <script src="/static/js/libs/plugins.js"></script>
     <script src="/static/js/main.js"></script>
-
-    {% block header %}{% endblock %}
-  </head>
-  <body>
-    <script>
-      $(document).ready(function(){
-        $("#btn-upload").change(function() {
-          $("#form-upload").submit();
+</head>
+<body>
+<script>
+    $(document).ready(function () {
+        $("#btn-upload").change(function () {
+            $("#form-upload").submit();
         });
-      });
-    </script>  
-    <!-- Static navbar -->
-    <div class="navbar navbar-default navbar-static-top" role="navigation">
-      <div class="container-fluid">
+    });
+</script>
+<!-- Static navbar -->
+<div class="navbar navbar-default navbar-static-top" role="navigation">
+    <div class="container-fluid">
         <div class="navbar-header">
-          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-            <span class="sr-only">{{_('Toggle navigation')}}</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="{{url_for('index')}}">Calibre Web</a>
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">{:lang('Toggle navigation')}</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Calibre Web</a>
         </div>
-        {% if g.user.is_authenticated or g.user.is_anonymous() %}
-          <form class="navbar-form navbar-left" role="search" action="{{url_for('search')}}" method="GET">
+        <!-- {% if g.user.is_authenticated or g.user.is_anonymous() %} -->
+        <form class="navbar-form navbar-left" role="search" action="/search/" method="GET">
             <div class="form-group input-group input-group-sm">
-              <input type="text" class="form-control" name="query" placeholder="{{_('Search')}}">
-              <span class="input-group-btn">
-                <button type="submit" class="btn btn-default">{{_('Go!')}}</button>
+                <input type="text" class="form-control" name="query" placeholder="{:lang('Search')}">
+                <span class="input-group-btn">
+                <button type="submit" class="btn btn-default">{:lang('Go!')}</button>
               </span>
             </div>
-          </form>
-        {% endif %}
+        </form>
+        <!-- {% endif %} -->
         <div class="navbar-collapse collapse">
-          {% if g.user.is_authenticated or g.user.is_anonymous() %}
-          <ul class="nav navbar-nav ">
-            <li><a href="{{url_for('advanced_search')}}"><span class="glyphicon glyphicon-search"></span><span class="hidden-sm"> {{_('Advanced Search')}}</span></a></li>
-          </ul>
-          {% endif %}
-          <ul class="nav navbar-nav navbar-right" id="main-nav">
-            {% if g.user.is_authenticated or g.user.is_anonymous() %}
-              {% if g.user.role_upload() or g.user.role_admin()%}
-                {% if g.allow_upload %}
-                    <li>
-                      <form id="form-upload" class="navbar-form" action="{{ url_for('upload" method="post" enctype="multipart/form-data">
-                        <div class="form-group">
-                          <span class="btn btn-default btn-file">{{_('Upload')}} <input id="btn-upload" name="btn-upload" type="file"></span>
-                        </div>
-                      </form>
-                    </li>
-                {% endif %}
-              {% endif %}
-              {% if g.user.role_admin() %}
-                <li><a id="top_admin" href="{{url_for('admin')}}"><span class="glyphicon glyphicon-dashboard"></span><span class="hidden-sm"> {{_('Admin')}}</span></a></li>
-              {% endif %}
-              <li><a id="top_user" href="{{url_for('profile')}}"><span class="glyphicon glyphicon-user"></span><span class="hidden-sm"> {{g.user.nickname}}</span></a></li>
-              {% if not g.user.is_anonymous() %}
-              <li><a id="logout" href="{{url_for('logout')}}"><span class="glyphicon glyphicon-log-out"></span><span class="hidden-sm"> {{_('Logout')}}</span></a></li>
-              {% endif %}
-            {% endif %}
-            {% if g.allow_registration and not g.user.is_authenticated %}
-            <li><a id="login" href="{{url_for('login')}}"><span class="glyphicon glyphicon-log-in"></span> {{_('Login')}}</a></li>
-            <li><a id="register" href="{{url_for('register')}}"><span class="glyphicon glyphicon-user"></span> {{_('Register')}}</a></li>
-            {% endif %}
-          </ul>
-        </div><!--/.nav-collapse -->
-      </div>
-    </div>
-    {% for message in get_flashed_messages(with_categories=True) %}
-      {%if message[0] == "error" %}
-      <div class="row-fluid" style="margin-top: -20px; text-align: center;">
-        <div id="flash_alert" class="alert alert-danger">{{ message[1] }}</div>
-      </div>
-      {%endif%}
-      {%if message[0] == "info" %}
-      <div class="row-fluid" style="margin-top: -20px; text-align: center;">
-        <div id="flash_info" class="alert alert-info">{{ message[1] }}</div>
-      </div>
-      {%endif%}
-      {%if message[0] == "success" %}
-      <div class="row-fluid" style="margin-top: -20px; text-align: center;">
-        <div id="flash_success" class="alert alert-success">{{ message[1] }}</div>
-      </div>
-      {%endif%}
-    {% endfor %}
-    <div class="container-fluid">
-      <div class="row-fluid">
-        {% if g.user.is_authenticated or g.user.is_anonymous() %}
-        <div class="col-sm-2">
-          <nav class="navigation">
-            <ul class="list-unstyled" id="scnd-nav" intent in-standard-append="nav.navigation" in-mobile-after="#main-nav" in-mobile-class="nav navbar-nav">
-              <li class="nav-head hidden-xs">{{_('Browse')}}</li>
-              <li id="nav_new"><a href="{{url_for('index')}}"><span class="glyphicon glyphicon-book"></span> {{_('New Books')}}</a></li>
-              {% if g.user.show_hot_books() %}
-              <li id="nav_hot"><a href="{{url_for('hot_books')}}"><span class="glyphicon glyphicon-fire"></span> {{_('Hot Books')}}</a></li>
-              {%endif%}
-              {% if g.user.show_best_rated_books() %}
-              <li><a href="{{url_for('best_rated_books')}}"><span class="glyphicon glyphicon-star"></span> {{_('Best rated Books')}}</a></li>
-              {%endif%}
-              {% if g.user.show_read_and_unread() %}
-              <li><a href="{{url_for('read_books')}}"><span class="glyphicon glyphicon-eye-open"></span> {{_('Read Books')}}</a></li>
-              <li><a href="{{url_for('unread_books')}}"><span class="glyphicon glyphicon-eye-close"></span> {{_('Unread Books')}}</a></li>
-              {%endif%}
-              {% if g.user.show_random_books() %}
-              <li id="nav_rand"><a href="{{url_for('discover')}}"><span class="glyphicon glyphicon-random"></span> {{_('Discover')}}</a></li>
-              {%endif%}
-              {% if g.user.show_category() %}
-              <li id="nav_cat"><a href="{{url_for('category_list')}}"><span class="glyphicon glyphicon-inbox"></span> {{_('Categories')}}</a></li>
-              {%endif%}
-              {% if g.user.show_series() %}
-              <li id="nav_serie"><a href="{{url_for('series_list')}}"><span class="glyphicon glyphicon-bookmark"></span> {{_('Series')}}</a></li>
-              {%endif%}
-              <li id="nav_author"><a href="{{url_for('author_list')}}"><span class="glyphicon glyphicon-user"></span> {{_('Authors')}}</a></li>
-              {% if g.user.filter_language() == 'all' and g.user.show_language() %}
-                <li id="nav_lang"><a href="{{url_for('language_overview')}}"><span class="glyphicon glyphicon-flag"></span> {{_('Languages')}} </a></li>
-              {%endif%}
-              {% if g.user.is_authenticated or g.user.is_anonymous() %}
-                <li class="nav-head hidden-xs">{{_('Public Shelves')}}</li>
-                {% for shelf in g.public_shelfes %}
-                  <li><a href="{{url_for('show_shelf', shelf_id=shelf.id)}}"><span class="glyphicon glyphicon-list"></span> {{shelf.name}}</a></li>
-                {% endfor %}
-                <li class="nav-head hidden-xs">{{_('Your Shelves')}}</li>
-                {% for shelf in g.user.shelf %}
-                  <li><a href="{{url_for('show_shelf', shelf_id=shelf.id)}}"><span class="glyphicon glyphicon-list"></span> {{shelf.name}}</a></li>
-                {% endfor %}
-              {% if not g.user.is_anonymous() %}
-                <li id="nav_createshelf" class="create-shelf"><a href="{{url_for('create_shelf')}}">{{_('Create a Shelf')}}</a></li>
-                <li id="nav_about"><a href="{{url_for('stats')}}"><span class="glyphicon glyphicon-info-sign"></span> {{_('About')}}</a></li>
-              {% endif %}
-              {% endif %}
-
+            <!-- {% if g.user.is_authenticated or g.user.is_anonymous() %} -->
+            <ul class="nav navbar-nav ">
+                <li><a href="/search/advanced/"><span class="glyphicon glyphicon-search"></span><span class="hidden-sm"> {:lang('Advanced Search')}</span></a>
+                </li>
             </ul>
-          </nav>
-        </div>
-        {% endif %}
-        <div class="col-sm-10">
-          {% block body %}{% endblock %}
-          {% if pagination and (pagination.has_next or pagination.has_prev) %}
-            <div class="pagination">
-            {% for page in pagination.iter_pages() %}
-              {% if page %}
-                {% if page != pagination.page %}
-                  <a href="{{ url_for_other_page(page) }}">{{ page }}</a>
-                {% else %}
-                  <strong>{{ page }}</strong>
-                {% endif %}
-              {% else %}
-                <span class="ellipsis">…</span>
-              {% endif %}
-            {% endfor %}
-            {% if pagination.has_next %}
-              <a class="next" href="{{ url_for_other_page(pagination.page + 1)
-                }}">Next &raquo;</a>
-            {% endif %}
-            </div>
-          {% endif %}
-        </div>
-      </div>
+            <!-- {% endif %} -->
+            <ul class="nav navbar-nav navbar-right" id="main-nav">
+                <!--    {% if g.user.is_authenticated or g.user.is_anonymous() %}
+                   {% if g.user.role_upload() or g.user.role_admin()%}
+                   {% if g.allow_upload %} -->
+                <li>
+                    <form id="form-upload" class="navbar-form" action="/upload/" method="post"
+                          enctype="multipart/form-data">
+                        <div class="form-group">
+                               <span class="btn btn-default btn-file">{:lang('Upload')}<input id="btn-upload"
+                                                                                              name="btn-upload"
+                                                                                              type="file"></span>
+                        </div>
+                    </form>
+                </li>
+                <!-- 如果是管理员 -->
+                <li><a id="top_admin" href="/admin/"><span
+                        class="glyphicon glyphicon-dashboard"></span><span
+                        class="hidden-sm"> {:lang('Admin')}</span></a>
+                </li>
+                <!-- {% endif %} -->
+                <li><a id="top_user" href="/profile/"><span class="glyphicon glyphicon-user"></span><span
+                        class="hidden-sm"> {$user.nickname}</span></a></li>
+                <!--  {% if not g.user.is_anonymous() %} -->
+                <li><a id="logout" href="/logout/"><span class="glyphicon glyphicon-log-out"></span><span
+                        class="hidden-sm"> {:lang('Logout')}</span></a></li>
+                <!-- {% endif %}
+               {% endif %}
+               {% if g.allow_registration and not g.user.is_authenticated %} -->
+                <li><a id="login" href="/login/"><span class="glyphicon glyphicon-log-in"></span>
+                    {:lang('Login')}</a></li>
+                <li><a id="register" href="/register/"><span class="glyphicon glyphicon-user"></span>
+                    {:lang('Register')}</a></li>
+                <!-- {% endif %} -->
+            </ul>
+        </div><!--/.nav-collapse -->
     </div>
-    {% block js %}{% endblock %}
-  </body>
-</html>
+</div>
+<!-- {% for message in get_flashed_messages(with_categories=True) %}
+{%if message[0] == "error" %}
+<div class="row-fluid" style="margin-top: -20px; text-align: center;">
+    <div id="flash_alert" class="alert alert-danger">{{ message[1] }}</div>
+</div>
+{%endif%}
+{%if message[0] == "info" %}
+<div class="row-fluid" style="margin-top: -20px; text-align: center;">
+    <div id="flash_info" class="alert alert-info">{{ message[1] }}</div>
+</div>
+{%endif%}
+{%if message[0] == "success" %}
+<div class="row-fluid" style="margin-top: -20px; text-align: center;">
+    <div id="flash_success" class="alert alert-success">{{ message[1] }}</div>
+</div>
+{%endif%}
+{% endfor %} -->
+<div class="container-fluid">
+    <div class="row-fluid">
+        <!-- {% if g.user.is_authenticated or g.user.is_anonymous() %} -->
+        <div class="col-sm-2">
+            <nav class="navigation">
+                <ul class="list-unstyled" id="scnd-nav" intent in-standard-append="nav.navigation"
+                    in-mobile-after="#main-nav" in-mobile-class="nav navbar-nav">
+                    <li class="nav-head hidden-xs">{:lang('Browse')}</li>
+                    <li id="nav_new"><a href="/"><span class="glyphicon glyphicon-book"></span>
+                        {:lang('New Books')}</a></li>
+                    <!-- {% if g.user.show_hot_books() %} -->
+                    <li id="nav_hot"><a href="/hot/"><span class="glyphicon glyphicon-fire"></span>
+                        {:lang('Hot Books')}</a></li>
+                    <!-- {%endif%}
+                    {% if g.user.show_best_rated_books() %} -->
+                    <li><a href="/rated/"><span class="glyphicon glyphicon-star"></span>
+                        {:lang('Best rated Books')}</a></li>
+                    <!-- {%endif%}
+                    {% if g.user.show_read_and_unread() %} -->
+                    <li><a href="/readbooks/"><span class="glyphicon glyphicon-eye-open"></span>
+                        {:lang('Read Books')}</a>
+                    </li>
+                    <li><a href="/unreadbooks/"><span class="glyphicon glyphicon-eye-close"></span>
+                        {:lang('Unread Books')}</a></li>
+                    <!-- {%endif%}
+                    {% if g.user.show_random_books() %} -->
+                    <li id="nav_rand"><a href="/discover/"><span class="glyphicon glyphicon-random"></span>
+                        {:lang('Discover')}</a></li>
+                    <!-- {%endif%}
+                    {% if g.user.show_category() %} -->
+                    <li id="nav_cat"><a href="/category/"><span
+                            class="glyphicon glyphicon-inbox"></span> {:lang('Categories')}</a></li>
+                    <!-- {%endif%}
+                    {% if g.user.show_series() %} -->
+                    <li id="nav_serie"><a href="/series/"><span
+                            class="glyphicon glyphicon-bookmark"></span> {:lang('Series')}</a></li>
+                    <!-- {%endif%}  -->
+                    <li id="nav_author"><a href="/author/"><span
+                            class="glyphicon glyphicon-user"></span> {:lang('Authors')}</a></li>
+                    <!-- {% if g.user.filter_language() == 'all' and g.user.show_language() %}
+                    <li id="nav_lang"><a href="{{url_for('language_overview')}}"><span
+                            class="glyphicon glyphicon-flag"></span> {{_('Languages')}} </a></li>
+                    {%endif%}
+                    {% if g.user.is_authenticated or g.user.is_anonymous() %} -->
+                    <li class="nav-head hidden-xs">{:lang('Public Shelves')}</li>
+                    <!-- {% for shelf in g.public_shelfes %} -->
+                    <li><a href="/shelf/id/1/"><span
+                            class="glyphicon glyphicon-list"></span> {{shelf.name}}</a></li>
+                    <!-- {% endfor %} -->
+                    <li class="nav-head hidden-xs">{:lang('Your Shelves')}</li>
+                    <!-- {% for shelf in g.user.shelf %} -->
+                    <li><a href="/shelf/id/1/"><span
+                            class="glyphicon glyphicon-list"></span> {{shelf.name}}</a></li>
+                    <!-- {% endfor %}
+                    {% if not g.user.is_anonymous() %} -->
+                    <li id="nav_createshelf" class="create-shelf"><a href="/shelf/create/">{:lang('Create a
+                        Shelf')}</a></li>
+                    <li id="nav_about"><a href="/stats/"><span
+                            class="glyphicon glyphicon-info-sign"></span> {:lang('About')}</a></li>
+                    <!-- {% endif %}
+                    {% endif %} -->
+
+                </ul>
+            </nav>
+        </div>
+        <!-- {% endif %} -->
+        <div class="col-sm-10">
+

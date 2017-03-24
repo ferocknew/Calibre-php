@@ -14,6 +14,24 @@ class Index extends Base
         Base::init();
     }
 
+    public function getBookList()
+    {
+        $r = array();
+
+        $r = self::$mydb->query('
+        select b.`id`,`title`,r.`rating`
+          from `books` as b
+          left join `books_ratings_link` as brl on b.`id`=brl.`book`
+          left join `ratings` as r on r.id=brl.`rating`
+        where r.`rating` > 9
+        order by b.`timestamp` desc
+        limit :limit;
+        ', array('limit' => self::$baseConfig['pageSize']));
+        halt($r);
+
+        return $r;
+    }
+
     /**
      * @return mixed
      */
