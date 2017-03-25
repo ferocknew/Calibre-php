@@ -16,7 +16,11 @@ class Rated extends Base
     public function index()
     {
         $this->assign('title', lang('Best rated Books'));
-        $r = self::$model->getBookList();
+        $r = self::$model->getBookList(array('type' => 'Rated'));
+        $r = $this->getBookInfo(array('book' => $r));
+
+        // halt($r);
+        $this->assign('book_data', $r);
 
         return $this->fetch('index/index');
     }

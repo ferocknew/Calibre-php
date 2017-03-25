@@ -5,10 +5,9 @@
     <h2>{:lang('Discover (Random Books)')}</h2>
     <div class="row">
 
-        {% for entry in random %}
         <div id="books_rand" class="col-sm-3 col-lg-2 col-xs-6 book">
             <div class="cover">
-                <a href="{{ url_for('show_book', id=entry.id) }}">
+                <a href="/book/id/?/">
                     {% if entry.has_cover %}
                     <img src="{{ url_for('get_cover', cover_path=entry.path.replace('\\','/')) }}"/>
                     {% else %}
@@ -34,51 +33,47 @@
                 {% endif %}
             </div>
         </div>
-        {% endfor %}
+
     </div>
 </div>
 <!-- {% endif %} -->
 <div class="discover load-more">
     <h2>{$title}</h2>
     <div class="row">
-        <!-- {% if entries[0] %}
-        {% for entry in entries %} -->
+        {volist name="book_data" id="vo"}
         <div id="books" class="col-sm-3 col-lg-2 col-xs-6 book">
             <div class="cover">
-                <a href="{{ url_for('show_book', id=entry.id) }}">
-                    {% if entry.has_cover %}
-                    <img src="{{ url_for('get_cover', cover_path=entry.path.replace('\\','/')) }}"/>
-                    {% else %}
-                    <img src="{{ url_for('static', filename='generic_cover.jpg') }}"/>
-                    {% endif %}
+                <a href="/book/id/{$vo.id}/">
+                    {if condition="($vo.has_cover == 1)"}
+                    <img src="/cover/index/?p={$vo.path}"/>
+                    {else /}
+                    <img src="/static/generic_cover.jpg"/>
+                    {/if}
                 </a>
             </div>
             <div class="meta">
-                <p class="title">{{entry.title|shortentitle}}</p>
+                <p class="title">{$vo.title}</p>
                 <p class="author">
-                    {% for author in entry.authors %}
-                    <a href="{{url_for('author', id=author.id) }}">{{author.name}}</a>
-                    {% if not loop.last %}
+                    {volist name="vo.author" id="v"}
+                    <a href="/author/id/{$v.id}/">{$v.author}</a>
+                    {if condition="($vo.author_count > $i)"}
                     &amp;
-                    {% endif %}
-                    {% endfor %}
+                    {/if}
+                    {/volist}
                 </p>
-                {% if entry.ratings.__len__() > 0 %}
+                {if condition="($vo.rating > 0)"}
                 <div class="rating">
-                    {% for number in range((entry.ratings[0].rating/2)|int(2)) %}
+                    {for start="1" end="$vo.rating"}
                     <span class="glyphicon glyphicon-star good"></span>
-                    {% if loop.last and loop.index < 5 %}
-                    {% for numer in range(5 - loop.index) %}
+                    {/for}
+                    {for start="0" end="$vo.rating_diff"}
                     <span class="glyphicon glyphicon-star"></span>
-                    {% endfor %}
-                    {% endif %}
-                    {% endfor %}
+                    {/for}
+
                 </div>
-                {% endif %}
+                {/if}
             </div>
         </div>
-        <!-- {% endfor %}
-        {% endif %}-->
+        {/volist}
     </div>
 </div>
-{% endblock %}

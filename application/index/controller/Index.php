@@ -17,7 +17,7 @@ class Index extends Base
     {
         //        $r = self::$model->index();
         //        halt($r);
-
+        $this->assign('title', lang('New Books'));
         return $this->fetch('index');
     }
 }

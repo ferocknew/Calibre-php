@@ -48,4 +48,15 @@ class Base extends Controller
     }
 
 
+    protected function getBookInfo($param = array())
+    {
+        $bookData = $param['book'];
+
+        foreach ($bookData as $k => $v) {
+            $bookData[$k]['path'] = urlencode($v['path']);
+        }
+        return $bookData;
+    }
+
+
 }
