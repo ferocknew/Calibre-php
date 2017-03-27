@@ -229,14 +229,19 @@ class Index extends Base
                         ';
 
                 $r = self::$mydb->table('books')->alias('b')->field('b.`id`,`title`,r.`rating`,b.`has_cover`,b.`path`')->join('`books_ratings_link` brl', 'b.`id`=brl.`book`')->join('`ratings` r', 'r.id=brl.`rating`')->where('r.`rating` > 9')->order('b.`id` desc')->paginate(self::$baseConfig['pageSize'], true);
-                trace(self::$mydb->getLastSql(), 'SQL');
+
                 break;
+
+            case 'discover':
+                $r = self::$mydb->table('books')->alias('b')->field('b.`id`,`title`,r.`rating`,b.`has_cover`,b.`path`')->join('`books_ratings_link` brl', 'b.`id`=brl.`book`')->join('`ratings` r', 'r.id=brl.`rating`')->where('')->order('random()')->paginate(self::$baseConfig['pageSize'], true);
+                break;
+
             default:
                 $r = self::$mydb->table('books')->alias('b')->field('b.`id`,`title`,r.`rating`,b.`has_cover`,b.`path`')->join('`books_ratings_link` brl', 'b.`id`=brl.`book`')->join('`ratings` r', 'r.id=brl.`rating`')->where('')->order('b.`id` desc')->paginate(self::$baseConfig['pageSize'], true);
-                trace(self::$mydb->getLastSql(), 'SQL');
+
                 break;
         }
-
+        trace(self::$mydb->getLastSql(), 'SQL');
         $data = $r->items();
         $r['data'] = $this->expandBookInfo($data);
 

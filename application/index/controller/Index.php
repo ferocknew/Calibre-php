@@ -38,4 +38,17 @@ class Index extends Base
 
         return $this->fetch('index');
     }
+
+    public function discover()
+    {
+        $r = self::$model->getBookList(array('type' => 'discover'));
+        $this->assign('book_data', $r['data']);
+
+        $page = $r->render();
+
+        $this->assign('page', $page);
+        $this->assign('title', lang('Discover'));
+
+        return $this->fetch('index');
+    }
 }
