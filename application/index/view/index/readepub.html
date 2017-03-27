@@ -19,10 +19,10 @@
 
             document.onreadystatechange = function () {
               if (document.readyState == "complete") {
-                EPUBJS.filePath = "{{ url_for('static', filename='js/libs/') }}";
-                EPUBJS.cssPath = "{{ url_for('static', filename='css/') }}";
+                EPUBJS.filePath = "/static/js/libs/";
+                EPUBJS.cssPath = "/static/css/";
 
-                window.reader = ePubReader("{{ url_for('static', filename=bookid) }}/");
+                window.reader = ePubReader("/static/epub/12/");
                 //keybind
                 $(document).keydown(function(event){ 
                   if(event.keyCode == 37){

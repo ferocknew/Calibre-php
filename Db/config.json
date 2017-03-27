@@ -1,5 +1,6 @@
 {
   "Calibre-database": "/var/services/homes/admin/CloudStation/Calibre-database/",
   "title": "Calibre-web",
-  "pageSize": 60
+  "pageSize": 60,
+  "epubPath": "/static/epub/"
 }

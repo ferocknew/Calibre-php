@@ -1,6 +1,8 @@
 <?php
 namespace app\index\controller;
 
+use s\fn;
+
 class Read extends Base
 {
     private static $model = null, $bookId = 0;
@@ -25,6 +27,8 @@ class Read extends Base
                 return $this->fetch('index/readtxt');
                 break;
             case 'EPUB':
+                $this->unzipEpub(array('book_id' => self::$bookId));
+
                 return $this->fetch('index/readepub');
                 break;
         }
@@ -66,8 +70,40 @@ class Read extends Base
         exit($fileContent);
     }
 
-    public function getEpubContent()
+    public function unzipEpub($param = array())
     {
+        $type = self::$route['tpye'];
+        $r = self::$model->getBookDatas(array('book_id' => self::$bookId,
+            'format' => $type));
+
+        $info = self::$model->bookInfo(array('book_id' => self::$bookId));
+        $filePath = self::$baseConfig['Calibre-database'] . $info[0]['path'] . '/' . $r[0]['data_name'] . '.' . strtolower($type);
+
+        $cacheName = sha1($filePath);
+        $cacheValue = cache($cacheName);
+        if (empty($cacheValue)) {
+            if (file_exists($filePath)) {
+                $fileMd5 = md5_file($filePath);
+            }
+            $dirPath = ROOT_PATH . 'public' . self::$baseConfig['epubPath'] . $param['book_id'] . '/';
+            if (file_exists($dirPath))
+                fn::delDir($dirPath);
+            fn::mkDirs($dirPath);
+
+            $zip = new \ZipArchive;//新建一个ZipArchive的对象
+            /*
+            通过ZipArchive的对象处理zip文件
+            $zip->open这个方法的参数表示处理的zip文件名。
+            如果对zip文件对象操作成功，$zip->open这个方法会返回TRUE
+            */
+            if ($zip->open($filePath) === true) {
+                $zip->extractTo($dirPath);//假设解压缩到在当前路径下images文件夹的子文件夹php
+                $zip->close();//关闭处理的zip文件
+            }
+
+            cache($cacheName, $fileMd5, 3600);
+        }
+
         return;
     }
 }
