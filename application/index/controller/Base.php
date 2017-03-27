@@ -12,7 +12,8 @@ use think\Lang;
 class Base extends Controller
 {
     private static $bcLength = 0;
-    public static $post = null, $get = null, $param = null, $route = null, $auth = null;
+    protected static $post = null, $get = null, $param = null, $route = null;
+    protected static $auth = null;
     public static $session = null;
     protected static $baseConfig = null;
 
@@ -28,13 +29,13 @@ class Base extends Controller
 
         self::$post = request()->post();
         self::$get = request()->get();
-        // self::$param = request()->param();
+        self::$param = request()->param();
         self::$route = request()->route();
-        // self::$session = session($moduleName);
 
         self::$bcLength = config('base.bcLength');
         bcscale(self::$bcLength);
 
+        $this->assign('book_data', array());
         $this->assign('instance', self::$baseConfig['title']);
         $this->assign('user', array('nickname' => '用户昵称'));
     }
@@ -54,7 +55,22 @@ class Base extends Controller
 
         foreach ($bookData as $k => $v) {
             $bookData[$k]['path'] = urlencode($v['path']);
+
+            if ($v['identifiers_count'] > 0) {
+                foreach ($v['identifiers'] as $k1 => $v1) {
+                    switch ($v1['type']) {
+                        case 'isbn':
+                            $bookData[$k]['identifiers'][$k]['url'] = 'http://www.worldcat.org/isbn/' . $v1['val'];
+                            break;
+                        default:
+                            $bookData[$k]['identifiers'][$k]['url'] = '';
+                            break;
+                    }
+
+                }
+            }
         }
+
         return $bookData;
     }
 

@@ -43,7 +43,7 @@
         {volist name="book_data" id="vo"}
         <div id="books" class="col-sm-3 col-lg-2 col-xs-6 book">
             <div class="cover">
-                <a href="/book/id/{$vo.id}/">
+                <a href="/book/index/id/{$vo.id}/">
                     {if condition="($vo.has_cover == 1)"}
                     <img src="/cover/index/?p={$vo.path}"/>
                     {else /}
