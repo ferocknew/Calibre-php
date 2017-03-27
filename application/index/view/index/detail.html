@@ -146,7 +146,7 @@
                             <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
                                 {volist name="$bookInfo.datas" id="vo"}
                                 <li>
-                                    <a href="/download/index/id/{$vo.id}/">{$vo.format}</a>
+                                    <a href="/read/download/id/{$bookInfo.id}/tpye/{$vo.format}/">{$vo.format}</a>
                                 </li>
                                 {/volist}
                             </ul>

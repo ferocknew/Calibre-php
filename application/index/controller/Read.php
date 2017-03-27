@@ -34,14 +34,41 @@ class Read extends Base
         }
     }
 
-    public function getContent()
+    public function download()
     {
         $type = self::$route['tpye'];
+        $filePath = $this->getFilePath();
+
         $r = self::$model->getBookDatas(array('book_id' => self::$bookId,
             'format' => $type));
+        $fileName = $r[0]['data_name'] . '.' . strtolower($type);
 
-        $info = self::$model->bookInfo(array('book_id' => self::$bookId));
-        $filePath = self::$baseConfig['Calibre-database'] . $info[0]['path'] . '/' . $r[0]['data_name'] . '.' . strtolower($type);
+        switch ($type) {
+            case 'TXT':
+                header("Content-Type:image/gif");
+                break;
+            case 'EPUB':
+                header("Content-Type:application/epub");
+                break;
+        }
+
+        //处理中文文件名
+        $ua = $_SERVER["HTTP_USER_AGENT"];
+        $encoded_filename = rawurlencode($fileName);
+        if (preg_match("/MSIE/", $ua)) {
+            header('Content-Disposition: attachment; filename="' . $encoded_filename . '"');
+        } else {
+            header('Content-Disposition: attachment; filename="' . $fileName . '"');
+        }
+
+
+        header('Content-Length:' . filesize($filePath));
+        readfile($filePath);
+    }
+
+    public function getContent()
+    {
+        $filePath = $this->getFilePath();
         $fileContent = '';
 
         $cacheName = sha1($filePath);
@@ -70,14 +97,9 @@ class Read extends Base
         exit($fileContent);
     }
 
-    public function unzipEpub($param = array())
+    private function unzipEpub($param = array())
     {
-        $type = self::$route['tpye'];
-        $r = self::$model->getBookDatas(array('book_id' => self::$bookId,
-            'format' => $type));
-
-        $info = self::$model->bookInfo(array('book_id' => self::$bookId));
-        $filePath = self::$baseConfig['Calibre-database'] . $info[0]['path'] . '/' . $r[0]['data_name'] . '.' . strtolower($type);
+        $filePath = $this->getFilePath();
 
         $cacheName = sha1($filePath);
         $cacheValue = cache($cacheName);
@@ -105,5 +127,17 @@ class Read extends Base
         }
 
         return;
+    }
+
+    private function getFilePath()
+    {
+        $type = self::$route['tpye'];
+        $r = self::$model->getBookDatas(array('book_id' => self::$bookId,
+            'format' => $type));
+
+        $info = self::$model->bookInfo(array('book_id' => self::$bookId));
+        $filePath = self::$baseConfig['Calibre-database'] . $info[0]['path'] . '/' . $r[0]['data_name'] . '.' . strtolower($type);
+
+        return $filePath;
     }
 }
