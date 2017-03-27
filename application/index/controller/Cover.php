@@ -23,7 +23,7 @@ class Cover extends Base
         $cacheValue = cache($cacheName);
         $Etag = '';
         if (empty($cacheValue)) {
-            $imgContent = file_get_contents($imgPath);
+            $imgContent=readfile($imgPath);
             $Etag = md5($imgContent);
             cache($cacheName, $Etag, 3600);
         } else {
@@ -41,7 +41,7 @@ class Cover extends Base
         header('Cache-Control:max-age=2592000');
         header("Etag:" . $Etag);
         header('Content-type: image/jpeg');
-        echo $imgContent;
+        readfile($imgPath);
         exit;
     }
 }

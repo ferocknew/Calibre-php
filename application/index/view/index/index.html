@@ -1,6 +1,6 @@
 {include file="index/layout"}
 <!-- {% block body %}
-{% if g.user.show_detail_random() %} -->
+{% if g.user.show_detail_random() %}
 <div class="discover">
     <h2>{:lang('Discover (Random Books)')}</h2>
     <div class="row">
@@ -9,15 +9,15 @@
             <div class="cover">
                 <a href="/book/id/?/">
                     {% if entry.has_cover %}
-                    <img src="{{ url_for('get_cover', cover_path=entry.path.replace('\\','/')) }}"/>
+                    <img src="#"/>
                     {% else %}
-                    <img src="{{ url_for('static', filename='generic_cover.jpg') }}"/>
+                    <img src="#"/>
                     {% endif %}
                 </a>
             </div>
             <div class="meta">
                 <p class="title">{{entry.title|shortentitle}}</p>
-                <p class="author"><a href="{{url_for('author', id=entry.authors[0].id) }}">{{entry.authors[0].name}}</a>
+                <p class="author"><a href="#">{{entry.authors[0].name}}</a>
                 </p>
                 {% if entry.ratings.__len__() > 0 %}
                 <div class="rating">
@@ -35,7 +35,7 @@
         </div>
 
     </div>
-</div>
+</div>-->
 <!-- {% endif %} -->
 <div class="discover load-more">
     <h2>{$title}</h2>
@@ -76,4 +76,5 @@
         </div>
         {/volist}
     </div>
-</div>
+    {$page}
+</div>{include file="public/foot"}

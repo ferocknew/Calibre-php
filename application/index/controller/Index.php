@@ -15,9 +15,27 @@ class Index extends Base
 
     public function index()
     {
-        //        $r = self::$model->index();
-        //        halt($r);
+        $r = self::$model->getBookList();
+        $this->assign('book_data', $r['data']);
+
+        $page = $r->render();
+
+        $this->assign('page', $page);
         $this->assign('title', lang('New Books'));
+
+        return $this->fetch('index');
+    }
+
+    public function hot()
+    {
+        $r = self::$model->getBookList(array('type' => 'hot'));
+        $this->assign('book_data', $r['data']);
+
+        $page = $r->render();
+
+        $this->assign('page', $page);
+        $this->assign('title', lang('Hot Books'));
+
         return $this->fetch('index');
     }
 }

@@ -29,6 +29,7 @@ class Read extends Base
             case 'EPUB':
                 $this->unzipEpub(array('book_id' => self::$bookId));
 
+                $this->assign('book_id', self::$bookId);
                 return $this->fetch('index/readepub');
                 break;
         }
@@ -45,7 +46,7 @@ class Read extends Base
 
         switch ($type) {
             case 'TXT':
-                header("Content-Type:image/gif");
+                header("Content-Type:text/plain");
                 break;
             case 'EPUB':
                 header("Content-Type:application/epub");
@@ -76,7 +77,8 @@ class Read extends Base
         $Etag = '';
         if (empty($cacheValue)) {
             if (file_exists($filePath))
-                $fileContent = file_get_contents($filePath);
+                // $fileContent = file_get_contents($filePath);
+                $fileContent=readfile($filePath);
             $Etag = md5($fileContent);
             cache($cacheName, $Etag, 3600);
         } else {
@@ -94,7 +96,7 @@ class Read extends Base
         header('Cache-Control:max-age=2592000');
         header("Etag:" . $Etag);
         header('Content-type: text/plain');
-        exit($fileContent);
+        readfile($filePath);
     }
 
     private function unzipEpub($param = array())

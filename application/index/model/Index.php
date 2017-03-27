@@ -227,14 +227,18 @@ class Index extends Base
                         order by b.`timestamp` desc
                         limit :limit;
                         ';
+
+                $r = self::$mydb->table('books')->alias('b')->field('b.`id`,`title`,r.`rating`,b.`has_cover`,b.`path`')->join('`books_ratings_link` brl', 'b.`id`=brl.`book`')->join('`ratings` r', 'r.id=brl.`rating`')->where('r.`rating` > 9')->order('b.`id` desc')->paginate(self::$baseConfig['pageSize'], true);
+                trace(self::$mydb->getLastSql(), 'SQL');
                 break;
             default:
+                $r = self::$mydb->table('books')->alias('b')->field('b.`id`,`title`,r.`rating`,b.`has_cover`,b.`path`')->join('`books_ratings_link` brl', 'b.`id`=brl.`book`')->join('`ratings` r', 'r.id=brl.`rating`')->where('')->order('b.`id` desc')->paginate(self::$baseConfig['pageSize'], true);
+                trace(self::$mydb->getLastSql(), 'SQL');
                 break;
         }
 
-
-        $r = self::$mydb->query($sql, array('limit' => self::$baseConfig['pageSize']));
-        $r = $this->expandBookInfo($r);
+        $data = $r->items();
+        $r['data'] = $this->expandBookInfo($data);
 
         return $r;
     }

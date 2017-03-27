@@ -19,7 +19,7 @@ return [
     // 应用调试模式
     'app_debug'              => true,
     // 应用Trace
-    'app_trace'              => false,
+    'app_trace'              => 0,
     // 应用模式状态
     'app_status'             => '',
     // 是否支持多模块
@@ -174,7 +174,7 @@ return [
         'path' => LOG_PATH,
         // 日志记录级别
         'level' => [],
-        'apart_level' => ['error','sql'],
+        'apart_level' => ['error','SQL'],
         'file_size' => 2097152],
 
     // +----------------------------------------------------------------------

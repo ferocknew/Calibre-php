@@ -36,6 +36,13 @@ class Base extends Model
             // 数据库表前缀
             'prefix' => '']);
 
+        self::$mydb->listen(function ($sql, $time, $explain) {
+            // 记录sql
+            trace($sql . ' [' . $time . 's]', 'SQL');
+            // 查看性能分析结果
+            trace($explain, 'SQL');
+        });
+
 
     }
 

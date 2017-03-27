@@ -22,7 +22,7 @@
                 EPUBJS.filePath = "/static/js/libs/";
                 EPUBJS.cssPath = "/static/css/";
 
-                window.reader = ePubReader("/static/epub/12/");
+                window.reader = ePubReader("/static/epub/{$book_id}/");
                 //keybind
                 $(document).keydown(function(event){ 
                   if(event.keyCode == 37){
