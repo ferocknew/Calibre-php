@@ -16,7 +16,7 @@ class Index extends Base
 
     public function bookInfo($param = array())
     {
-        $r = array();
+        $cacheValue = array();
         $sql = "
         select
           b.`id`,b.`title`,b.`path`,b.`has_cover`,r.`rating`,
@@ -35,8 +35,16 @@ class Index extends Base
         where b.`id`=?
         ";
 
-        $r = self::$mydb->query($sql, array($param['book_id']));
-        $r = $this->expandBookInfo($r);
+        $cacheName = sha1(__FUNCTION__ . $param['book_id']);
+        $cacheValue = cache($cacheName);
+
+        if (empty($cacheValue)) {
+            $r = self::$mydb->query($sql, array($param['book_id']));
+            $cacheValue = $this->expandBookInfo($r);
+            cache($cacheName, $cacheValue);
+        }
+
+        $r = $cacheValue;
 
         if (is_null($r[0]['series'])) {
             $r[0]['series'] = 0;
@@ -49,6 +57,12 @@ class Index extends Base
 
     private function expandBookInfo($r)
     {
+        $cacheName = sha1(__FUNCTION__ . json_encode($r));
+        $cacheValue = cache($cacheName);
+
+        if (!empty($cacheValue))
+            return $cacheValue;
+
         foreach ($r as $k => $v) {
             $authors = $this->getBookAuthors(array('book_id' => $v['id']));
             $i = 1;
@@ -103,6 +117,8 @@ class Index extends Base
             }
 
         }
+
+        cache($cacheName, $r);
 
         return $r;
     }
@@ -194,20 +210,26 @@ class Index extends Base
 
     public function getBookIdentifiers($param = array())
     {
-        $r = array();
+        $cacheValue = array();
         $param['book_id'] = isset($param['book_id']) ? $param['book_id'] : 0;
         if (empty($param['book_id']))
             return false;
 
+        $cacheName = sha1(__FUNCTION__ . $param['book_id']);
+        $cacheValue = cache($cacheName);
         $sql = "
                 select a.`id`,a.`type`,a.`val`
                   from `identifiers` as a
                 where a.`book` = :book
         ";
 
-        $r = self::$mydb->query($sql, array('book' => $param['book_id']));
+        if (empty($cacheValue)) {
+            $cacheValue = self::$mydb->query($sql, array('book' => $param['book_id']));
+            cache($cacheName, $cacheValue);
+        }
 
-        return $r;
+
+        return $cacheValue;
     }
 
 
@@ -228,20 +250,19 @@ class Index extends Base
                         limit :limit;
                         ';
 
-                $r = self::$mydb->table('books')->alias('b')->field('b.`id`,`title`,r.`rating`,b.`has_cover`,b.`path`')->join('`books_ratings_link` brl', 'b.`id`=brl.`book`')->join('`ratings` r', 'r.id=brl.`rating`')->where('r.`rating` > 9')->order('b.`id` desc')->paginate(self::$baseConfig['pageSize'], true);
+                $r = self::$mydb->table('books')->alias('b')->field('b.`id`,`title`,r.`rating`,b.`has_cover`,b.`path`')->join('`books_ratings_link` brl', 'b.`id`=brl.`book`', 'LEFT')->join('`ratings` r', 'r.id=brl.`rating`', 'LEFT')->where('r.`rating` > 9')->order('b.`id` desc')->cache(true)->paginate(self::$baseConfig['pageSize'], true);
 
                 break;
 
             case 'discover':
-                $r = self::$mydb->table('books')->alias('b')->field('b.`id`,`title`,r.`rating`,b.`has_cover`,b.`path`')->join('`books_ratings_link` brl', 'b.`id`=brl.`book`')->join('`ratings` r', 'r.id=brl.`rating`')->where('')->order('random()')->paginate(self::$baseConfig['pageSize'], true);
+                $r = self::$mydb->table('books')->alias('b')->field('b.`id`,`title`,r.`rating`,b.`has_cover`,b.`path`')->join('`books_ratings_link` brl', 'b.`id`=brl.`book`', 'LEFT')->join('`ratings` r', 'r.id=brl.`rating`', 'LEFT')->where('')->order('random()')->cache(true, 2)->paginate(self::$baseConfig['pageSize'], true);
                 break;
 
             default:
-                $r = self::$mydb->table('books')->alias('b')->field('b.`id`,`title`,r.`rating`,b.`has_cover`,b.`path`')->join('`books_ratings_link` brl', 'b.`id`=brl.`book`')->join('`ratings` r', 'r.id=brl.`rating`')->where('')->order('b.`id` desc')->paginate(self::$baseConfig['pageSize'], true);
+                $r = self::$mydb->table('books')->alias('b')->field('b.`id`,`title`,r.`rating`,b.`has_cover`,b.`path`')->join('`books_ratings_link` brl', 'b.`id`=brl.`book`', 'LEFT')->join('`ratings` r', 'r.id=brl.`rating`', 'LEFT')->where('')->order('b.`id` desc')->cache(true)->paginate(self::$baseConfig['pageSize'], true);
 
                 break;
         }
-        trace(self::$mydb->getLastSql(), 'SQL');
         $data = $r->items();
         $r['data'] = $this->expandBookInfo($data);
 

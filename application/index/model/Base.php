@@ -34,7 +34,10 @@ class Base extends Model
             // 数据库编码默认采用utf8
             'charset' => 'utf8',
             // 数据库表前缀
-            'prefix' => '']);
+            'prefix' => '',
+            'debug' => 1,
+            'fields_strict' => 1,
+            'resultset_type' => 'array']);
 
         self::$mydb->listen(function ($sql, $time, $explain) {
             // 记录sql

@@ -167,14 +167,14 @@ return [
         'type' => 'socket',
         'host' => '127.0.0.1',
         //日志强制记录到配置的client_id
-        'force_client_ids' => ['ferock1','ferock'],
+        // 'force_client_ids' => ['ferock1','ferock'],
         //限制允许读取日志的client_id
-        'allow_client_ids' => ['ferock1','ferock'],
+        // 'allow_client_ids' => ['ferock1','ferock'],
         // 日志保存目录
         'path' => LOG_PATH,
         // 日志记录级别
         'level' => [],
-        'apart_level' => ['error','SQL'],
+        'apart_level' => ['error','sql'],
         'file_size' => 2097152],
 
     // +----------------------------------------------------------------------
@@ -197,7 +197,7 @@ return [
         // 缓存前缀
         'prefix' => '',
         // 缓存有效期 0表示永久缓存
-        'expire' => 0,
+        'expire' => 60,
     ],
 
     // +----------------------------------------------------------------------

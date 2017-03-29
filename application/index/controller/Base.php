@@ -16,9 +16,11 @@ class Base extends Controller
     protected static $auth = null;
     public static $session = null;
     protected static $baseConfig = null;
+    protected static $cache = null;
 
     public function _initialize()
     {
+
         Lang::setAllowLangList(['zh-CN']);
         Config::parse(ROOT_PATH . 'Db/config.json', 'json', 'baseConfig');
 
